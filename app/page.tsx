@@ -450,7 +450,7 @@ export default function Home() {
 							<div className='grid md:grid-cols-2 gap-8 items-center'>
 								<div className='relative h-[250px]'>
 									<Image
-										src='/Apple Devices.png'
+										src='/device.png'
 										alt='Apple Devices'
 										fill
 										className='object-contain'
