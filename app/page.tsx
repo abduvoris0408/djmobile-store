@@ -1,3 +1,4 @@
+'use client'
 import ProductCard from '@/components/product-card'
 import { categories1 } from '@/lib/utils'
 import {
@@ -9,8 +10,18 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
+	const [products, setProducts] = useState([])
+
+	useEffect(() => {
+		fetch('https://dummyjson.com/products?limit=20')
+			.then(res => res.json())
+			.then(data => setProducts(data.products))
+			.catch(error => console.error('Error fetching products:', error))
+	}, [])
+
 	return (
 		<div className='min-h-screen flex flex-col '>
 			<div className='hidden md:flex justify-between items-center py-2 px-4 text-sm border-b container mx-auto w-[87%]'>
@@ -190,59 +201,40 @@ export default function Home() {
 
 				{/* Featured Products */}
 				<section className='py-12 px-4 md:px-8 bg-gray-50'>
-					<div className='max-w-7xl mx-auto'>
-						<div className='grid md:grid-cols-2 gap-6'>
-							{/* Security Camera Card */}
-							<div className='bg-white p-8 rounded-lg flex flex-col items-center text-center'>
+					<h2 className='text-2xl font-bold mb-8 text-center'>
+						Products
+					</h2>
+					<div className='max-w-7xl mx-auto grid md:grid-cols-3 gap-6'>
+						{products.map(product => (
+							<Link
+								key={product.id}
+								href={`/${product.id}`}
+								className='bg-white p-6 rounded-lg flex flex-col items-center text-center cursor-pointer hover:shadow-lg transition'
+							>
 								<div className='uppercase text-sm font-medium text-gray-500 mb-2'>
-									SECURITY SMART CAMERA
+									{product.category.toUpperCase()}
 								</div>
-								<h3 className='text-xl font-medium mb-6'>
-									Just starting at $850
+								<h3 className='text-xl font-medium mb-4'>
+									{product.title}
 								</h3>
-								<Link
-									href='/'
-									className='bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors mb-6'
-								>
-									Shop Now
-								</Link>
-								<div className='relative h-48 w-full'>
+								<div className='relative h-40 w-full'>
 									<Image
-										src='/Camera.png'
-										alt='Security Camera'
+										src={
+											product.thumbnail ||
+											'/placeholder.svg'
+										}
+										alt={product.title}
 										fill
 										className='object-contain'
 									/>
 								</div>
-							</div>
-
-							{/* Gaming Card */}
-							<div className='bg-white p-8 rounded-lg flex flex-col items-center text-center'>
-								<div className='uppercase text-sm font-medium text-gray-500 mb-2'>
-									ENTERTAINMENT & GAMES
-								</div>
-								<h3 className='text-xl font-medium mb-6'>
-									Just starting at $450
-								</h3>
-								<Link
-									href='/'
-									className='bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors mb-6'
-								>
-									Shop Now
-								</Link>
-								<div className='relative h-48 w-full'>
-									<Image
-										src='/Games.png'
-										alt='Gaming Controller'
-										fill
-										className='object-contain'
-									/>
-								</div>
-							</div>
-						</div>
+								<span className='bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors mt-4'>
+									View Details
+								</span>
+							</Link>
+						))}
 					</div>
 				</section>
-
 				{/* Latest Products */}
 				<section className='py-12 px-4 md:px-8'>
 					<div className='max-w-7xl mx-auto'>
